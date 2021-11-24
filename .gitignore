@@ -1,0 +1,11 @@
+/faces/*
+/testing/*
+encodings.pkl
+*.txt
+*.json
+*.jpg
+/dataset/
+/people/
+/model/
+__pycache__
+*.weights
