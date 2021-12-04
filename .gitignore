@@ -9,3 +9,5 @@ encodings.pkl
 /model/
 __pycache__
 *.weights
+*.pkl
+*.zip

@@ -179,6 +179,8 @@ class FaceNet():
         for db_name, db_encode in self.encodings.items():
             dist = cosine(db_encode, encode)
             predictions.append((db_name, dist))
+            if dist < recognition_t:
+                predictions.append((db_name, dist))
 
         if len(predictions) > 0:
             name, distance = min(predictions, key = lambda v: v[1])
