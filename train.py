@@ -156,7 +156,7 @@ class FaceNet():
                 encode = self.model.predict(face_d)[0]
                 encodes.append(encode)
             if encodes:
-                encode = np.sum(encodes, axis=0 )
+                encode = np.mean(encodes, axis=0 ) #it was sum
                 encode = self.l2_normalizer.transform(np.expand_dims(encode, axis=0))[0]
                 encoding_dict[face_names] = encode
 
@@ -165,7 +165,7 @@ class FaceNet():
             pickle.dump(encoding_dict, file)
 
     def model_prediction(self, face):
-        recognition_t=0.5
+        recognition_t=0.4
         if self.encodings is None:
             path = './encodings.pkl'
             self.encodings = FaceNet.load_pickle(path)
@@ -175,12 +175,13 @@ class FaceNet():
         encode = self.l2_normalizer.transform(encode.reshape(1, -1))[0]
         distance = float("inf")
         name = 'unknown'
+        predictions = []
         for db_name, db_encode in self.encodings.items():
             dist = cosine(db_encode, encode)
-            #dist = FaceNet.face_distance(db_encode, encode)
-            if dist < recognition_t and dist < distance:
-                name = db_name
-                distance = dist
+            predictions.append((db_name, dist))
+
+        if len(predictions) > 0:
+            name, distance = min(predictions, key = lambda v: v[1])
         return name, distance
 
 
